@@ -30,7 +30,9 @@ class PowerAuthComponent extends AuthComponent {
 	 * Leaving this property to "false" does not change the default AuthComponent behavior
 	 * of redirecting to the referral url of the denied request.
 	 */
-	public $accessDeniedRedirect = false;
+	public $accessDeniedRedirect = null;
+	
+	public $accessDeniedHardRedirect = false;
 	
 	
 	public function startup(Controller $controller) {
@@ -107,12 +109,31 @@ class PowerAuthComponent extends AuthComponent {
 		
 		/** @@CakePOWER@@ **/
 		#$controller->redirect($controller->referer('/'), null, true);
-		$accessDeniedRedirect = $this->accessDeniedRedirect;
-		if ( !$accessDeniedRedirect ) $accessDeniedRedirect = $controller->referer('/');
-		$controller->redirect($accessDeniedRedirect, null, true);
 		
+		
+		// Hard redirect mode - always redirect to this url.
+		if ( $this->accessDeniedHardRedirect !== false ) {
+			$redirect = $this->accessDeniedHardRedirect;
+		
+		// Soft redirect used as fallback if referer is not available.
+		} else if ( $this->accessDeniedRedirect !== false ) {
+			
+			// Soft redirect default behavior is to act as a login page to ask user to change it's credentials to grant access to the requested feature.
+			if ( $this->accessDeniedRedirect === null && !empty($this->loginAction) ) $this->accessDeniedRedirect = $this->loginAction;
+			
+			$redirect = $controller->referer($this->accessDeniedRedirect);
+		
+		// AuthComponent standard redirect.
+		} else {
+			$redirect = $controller->referer('/');
+			
+		}
+		
+		// Apply the redirect.
+		$controller->redirect($redirect, null, true);
 		
 		return false;
+		
 	}
 
 }
