@@ -18,6 +18,7 @@ define( 'POWER_START', microtime() );
 
 App::import('Vendor', 'CakePower.Basics' );
 App::import('Vendor', 'CakePower.Uth' );
+App::import('Vendor', 'CakePower.PowerSet' );
 App::import('Vendor', 'CakePower.PowerConfig' );
 
 App::uses( 'CakePowerController', 'CakePower.Controller' );

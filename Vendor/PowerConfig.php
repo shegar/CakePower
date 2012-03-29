@@ -192,14 +192,14 @@ class PowerConfig {
 		if ( !is_array($val) ) return self::set( $key, $val );
 		
 		// I use "Set" core library to extend desired path with new values.
-		self::set( $key, Set::merge( $data, $val ) );
+		self::set( $key, PowerSet::merge( $data, $val ) );
 		
 	}
 	
 	
 /**
  * Extend a key data but does not alter exising values.
- * Uses Set::pushDiff()
+ * Uses PowerSet::pushDiff()
  */
 	public static function pushDiff( $key = null, $val = null ) {
 		
@@ -216,7 +216,7 @@ class PowerConfig {
 		// If desired path doesn't exists will be created with new value without extend anything. #
 		if ( !empty($key) && !self::exists($key) ) return self::set( $key, $val );
 		
-		// Use Set::pushDiff() to merge data
+		// Use PowerSet::pushDiff() to merge data
 		return PowerConfig::set( $key, Set::pushDiff(PowerConfig::get($key),$val) );
 		
 	}
@@ -270,6 +270,163 @@ class PowerConfig {
 		foreach ( array_reverse($args) as $arg ) array_unshift( $data, $arg );
 		
 		return self::set( $key, $data );
+	
+	}
+	
+
+	
+	
+/**
+ * Inject data into an associative array contained into the configuration data.
+ * 
+ * PowerConfig::set( 'test', array(
+ *   'foo1' => 'a',
+ *   'foo2' => 'a'
+ * ));
+ * 
+ * PowerConfig::before( 'test.foo2', 'fooBefore2' , 'value' );
+ * 
+ * array(
+ *   'foo1' => 'a',
+ *   'fooBefore2' => 'value',
+ *   'foo2' => 'a'
+ * )
+ * 
+ * PowerConfig::after( 'test.foo1', array('foo1b'=>'pippo'));
+ * 
+ * array(
+ *   'foo1' => 'a',
+ *   'foo1b' => 'pippo',
+ *   'fooBefore2' => 'value',
+ *   'foo2' => 'a'
+ * ) 
+ * 
+ * ---------
+ * 
+ * PowerConfig::set( 'test1', array( 'a', 'b', 'c' ));
+ * 
+ * PowerConfig::after( 'test1.a', 'a1' );
+ * -> array( 'a', 'a1', 'b', 'c' );
+ * 
+ * PowerConfig::before( '{0}', 'colors' );
+ * -> array( 'colors', 'a', 'a1', 'b', 'c' );
+ * 
+ */
+	public static function before( $key = null, $name = '', $val = null ) {
+		
+		// Get method components
+		$lastKey 	= self::thisPath($key,false);
+		$parentKey 	= self::parentPath($key,false);
+		
+		if ( !self::exists($key) ) {
+			
+			// Check for scalar vectors requests
+			$arr = self::get($parentKey);
+			
+			if ( $arr !== false && PowerSet::is_vector($arr) ) {
+				
+				$result = PowerSet::beforeVector( $arr, $lastKey, $name );
+				
+				self::set( $parentKey, $result );
+				return true;
+			
+			}
+			
+			return false;
+			
+		}
+		
+		// Associative array request.
+		
+		$result = PowerSet::beforeAssoc( self::get($parentKey), $lastKey, $name, $val );
+		if ( $result === false ) return false;
+		
+		self::set( $parentKey, $result );
+		return true;
+		
+	}
+	
+	public static function after( $key = null, $name = '', $val = null ) {
+		
+		// Get method components
+		$lastKey 	= self::thisPath($key,false);
+		$parentKey 	= self::parentPath($key,false);
+		
+		
+		if ( !self::exists($key) ) {
+			
+			// Check for scalar vectors requests
+			$arr = self::get($parentKey);
+			
+			if ( $arr !== false && PowerSet::is_vector($arr) ) {
+				
+				$result = PowerSet::afterVector( $arr, $lastKey, $name );
+				
+				self::set( $parentKey, $result );
+				return true;
+			
+			}
+			
+			return false;
+			
+		}
+		
+		// Associative array request.
+		
+		$result = PowerSet::afterAssoc( self::get($parentKey), $lastKey, $name, $val );
+		if ( $result === false ) return false;
+		
+		self::set( $parentKey, $result );
+		
+	}
+	
+	
+	
+/**	
+ * supplies the last path trunk of a given path:
+ * 
+ * path1.path2.path3 -> "path3"
+ * 
+ */
+	public static function thisPath( $key = null, $exists = true ) {
+		
+		if ( !self::exists($key) && $exists ) return false;
+		
+		$key = PowerSet::dots2array($key);
+		
+		return array_pop($key);
+	
+	}
+	
+	
+/**
+ * supplies the parent path of an existing path.
+ * return false if path does not exists.
+ */
+	public static function parentPath( $key = null, $exists = true ) {
+		
+		if ( !self::exists($key) && $exists ) return false;
+		
+		$key = PowerSet::dots2array($key);
+		
+		array_pop($key);
+		
+		return PowerSet::array2dots($key);
+	
+	}
+	
+	
+/**
+ * supplies the parent data array of a path.
+ * return false if path does not exists.
+ */
+	public static function parent( $key = null ) {
+		
+		$parentKey = self::parentPath( $key );
+		
+		if ( $parentKey === false ) return false;
+		
+		return self::get($parentKey);
 	
 	}
 	
