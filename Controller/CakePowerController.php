@@ -17,7 +17,7 @@ class CakePowerController extends Controller {
 	protected $__cakePower = array(
 		'version' 			=> '1.0',
 		'components' 		=> array( 'Session', 'Auth' ),
-		'helpers' 			=> array()
+		'helpers' 			=> array( 'Html' ),
 	);
 	
 	
@@ -33,6 +33,15 @@ class CakePowerController extends Controller {
 			
 			if ( empty($this->components[$cmp]) ) $this->components[$cmp] = array();
 			if ( empty($this->components[$cmp]['className']) ) $this->components[$cmp]['className'] = 'CakePower.Power'.$cmp;
+			
+		}
+		
+		
+		// Fill the components array with aliasing informations to use CakePower's classes
+		foreach ( $this->__cakePower['helpers'] as $cmp ) {
+			
+			if ( empty($this->helpers[$cmp]) ) $this->helpers[$cmp] = array();
+			if ( empty($this->helpers[$cmp]['className']) ) $this->helpers[$cmp]['className'] = 'CakePower.Power'.$cmp;
 			
 		}
 		
