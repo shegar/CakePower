@@ -1,6 +1,6 @@
 <?php
 /**
- * TreeHelper
+ * PowerTreeHelper
  * Utility to display threaded data.
  *
  * @author: Marco Pegoraro (MPeg)
@@ -11,11 +11,11 @@
  *
  * array(
  *     0 => array(
- *         'Model' => array( 'id'=>'value…', 'title'=>'value…', 'fieldName'=>'value…' ),
+ *         'Model' => array( 'id'=>'value', 'title'=>'value', 'fieldName'=>'value' ),
  *         'children' => array(
  *             0 => array(
- *                 'Model' => array( 'id'=>'value…', 'title'=>'value…', 'fieldName'=>'value…' ),
- *                 'children' => array( … )
+ *                 'Model' => array( 'id'=>'value', 'title'=>'value', 'fieldName'=>'value' ),
+ *                 'children' => array( ... )
  *             )
  *         )
  *     )
@@ -27,7 +27,7 @@
  * the data array allowing an external manipulation of the data itself.
  *
  */
-class TreeHelper extends AppHelper {
+class PowerTreeHelper extends AppHelper {
 	
 	public $helpers = array( 'Html' );
 	

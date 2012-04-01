@@ -407,11 +407,7 @@ class PowerConfig {
 		
 		if ( !self::exists($key) && $exists ) return false;
 		
-		$key = PowerSet::dots2array($key);
-		
-		array_pop($key);
-		
-		return PowerSet::array2dots($key);
+		return PowerSet::dotsParent($key);
 	
 	}
 	

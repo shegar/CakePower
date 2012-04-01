@@ -16,10 +16,11 @@ define( 'POWER_START', microtime() );
  * Import Libraries.
  */
 
-App::import('Vendor', 'CakePower.Basics' );
-App::import('Vendor', 'CakePower.Uth' );
-App::import('Vendor', 'CakePower.PowerSet' );
-App::import('Vendor', 'CakePower.PowerConfig' );
+App::import( 'Vendor', 'CakePower.Basics' );
+App::import( 'Vendor', 'CakePower.Uth' );
+App::import( 'Vendor', 'CakePower.PowerSet' );
+App::import( 'Vendor', 'CakePower.PowerConfig' );
+App::import( 'Vendor', 'CakePower.PowerMenu' );
 
 App::uses( 'CakePowerController', 'CakePower.Controller' );
 
@@ -65,9 +66,29 @@ PowerConfig::set(array(
 	// PowerConfig::get('plugin.MyPlugin.load.bootstrap');
 	//
 	// There is a key "config" where each plugin can store internal configurations.
-	'plugin' => array(),
+	'plugin' => array(
+		
+		// Internal configuration for CakePower
+		'CakePower' => array(
+			
+			// This key will contain all menus defined in the sistem and handler by the PanelMenu class and the PanelMenu Helper
+			'menu' => array(
+				
+				// Container for admin menus
+				'admin' => array(),
+				
+				// Container for public menus
+				'public' => array()
+				
+			)
+	
+		)
+	
+	),
 
 ));
+
+
 
 
 

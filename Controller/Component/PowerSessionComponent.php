@@ -36,13 +36,25 @@ class PowerSessionComponent extends SessionComponent {
 	
 	function ok( $str, $options = array() ) {
 		
-		$this->setFlash( $str, 'default', $options, 'okFlash' );
+		if ( !array_key_exists('title',$options) ) $options['title'] = __('Ok!');
+		
+		$this->setFlash( $str, 'default', $options, 'ok' );
 		
 	}
 	
 	function ko( $str, $options = array() ) {
 		
-		$this->setFlash( $str, 'default', $options, 'koFlash' );
+		if ( !array_key_exists('title',$options) ) $options['title'] = __('Error!');
+		
+		$this->setFlash( $str, 'default', $options, 'ko' );
+		
+	}
+	
+	function alert( $str, $options = array() ) {
+		
+		if ( !array_key_exists('title',$options) ) $options['title'] = __('Warning!');
+		
+		$this->setFlash( $str, 'default', $options, 'alert' );
 		
 	}
 	

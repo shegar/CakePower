@@ -28,20 +28,15 @@ class CakePowerController extends Controller {
  */
 	public function __construct($request = null, $response = null) {
 		
-		// Fill the components array with aliasing informations to use CakePower's classes
-		foreach ( $this->__cakePower['components'] as $cmp ) {
+		// Loads extended core classes setting an alias to use them with the normal app names.
+		foreach( array('components','helpers') as $type ) {
 			
-			if ( empty($this->components[$cmp]) ) $this->components[$cmp] = array();
-			if ( empty($this->components[$cmp]['className']) ) $this->components[$cmp]['className'] = 'CakePower.Power'.$cmp;
-			
-		}
-		
-		
-		// Fill the components array with aliasing informations to use CakePower's classes
-		foreach ( $this->__cakePower['helpers'] as $cmp ) {
-			
-			if ( empty($this->helpers[$cmp]) ) $this->helpers[$cmp] = array();
-			if ( empty($this->helpers[$cmp]['className']) ) $this->helpers[$cmp]['className'] = 'CakePower.Power'.$cmp;
+			foreach ( $this->__cakePower[$type] as $cmp ) {
+				
+				if ( empty($this->{$type}[$cmp]) ) $this->{$type}[$cmp] = array();
+				if ( empty($this->{$type}[$cmp]['className']) ) $this->{$type}[$cmp]['className'] = 'CakePower.Power'.$cmp;
+				
+			}
 			
 		}
 		

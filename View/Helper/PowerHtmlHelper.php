@@ -8,6 +8,18 @@ App::import( 'View/Helper', 'HtmlHelper' );
 
 class PowerHtmlHelper extends HtmlHelper {
 	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 /**	
  * css()
@@ -81,12 +93,12 @@ class PowerHtmlHelper extends HtmlHelper {
 				
 				// Allow to per-item $rel param configuration
 				$_rel = $rel;
-				if ( !isset($opt['rel']) ) {
+				if ( isset($opt['rel']) ) {
 					$_rel = $opt['rel'];
 					unset($opt['rel']);
 				}
 				
-				$out .= "\n\t" . $this->css($i, $rel, PowerSet::merge($options,$opt) );			
+				$out .= "\n\t" . $this->css($i, $_rel, PowerSet::merge($options,$opt) );			
 			}
 			/** --CakePOWER-- **/
 			
@@ -149,6 +161,57 @@ class PowerHtmlHelper extends HtmlHelper {
 			$this->_View->append($options['block'], $out);
 		}
 		
+	}
+	
+	
+	
+	
+	
+	
+	
+/**
+ * tag()
+ * ------------------------------------
+ * add possibility to nest multiple tags inside $text property.
+ * 
+ * // The CakePHP way:
+ * $text = 'This is a ';
+ * $text.= $this->Html->link( 'link', 'http://cakepower.org' );
+ * echo $this->Html->tag( 'p', $text );
+ * 
+ * // The CakePower way:
+ * echo $this->Html->tag( 'p', array(
+ *     'This is a ',
+ *     $this->Html->link( 'link', 'http://cakepower.org' )
+ * ));
+ * 
+ * You can nest how many declarations as you wish/need containing code verbosity of
+ * declarate many temporary vars!
+ * 
+ * 
+ * @param unknown_type $name
+ * @param unknown_type $text
+ * @param unknown_type $options
+ */	
+	public function tag($name, $text = null, $options = array()) {
+		
+		if ( is_array($text) ) {
+			
+			$_text = $text;
+			
+			$text = '';
+			
+			foreach ( $_text as $item ) {
+				
+				$text.= $item;
+			
+			}
+			
+		}
+		
+		// Use the CakePHP's parent method to output the HTML source.
+		return parent::tag( $name, $text, $options );
+	
 	}
 	
 

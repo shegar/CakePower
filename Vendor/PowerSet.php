@@ -33,6 +33,16 @@ class PowerSet extends Set {
 		return ($b === $a ? $a + 1 : 0);
 		
 	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 /**
@@ -49,6 +59,9 @@ class PowerSet extends Set {
  * )
  * 
  * array2dots() is the reverse logic.
+ * 
+ * dotsParent('path1.path2.path3')
+ * -> path1.path2
  * 
  */
 	public static function dots2array( $dots = '' ) {
@@ -79,6 +92,17 @@ class PowerSet extends Set {
 		 
 	}
 	
+	public static function dotsParent( $dots = '' ) {
+		
+		$tmp = self::dots2array($dots);
+		
+		if ( count($tmp) < 1 ) return $dots;
+		
+		array_pop($tmp);
+		
+		return self::array2dots($tmp);
+	
+	}
 	
 	
 	
