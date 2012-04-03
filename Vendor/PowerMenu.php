@@ -50,6 +50,18 @@ class PowerMenu {
 	
 	
 	
+/**	
+ * 
+ * Check if a path exists in the tree. 
+ * @param unknown_type $path
+ */
+	public static function exists( $path = '' ) {
+		
+		return PowerConfig::exists( self::_fullPath($path,false) );
+	
+	}
+	
+	
 	
 	
 /**	
@@ -279,11 +291,15 @@ class PowerMenu {
 	
 	public static function setActive( $path = '' ) {
 		
+		if ( !self::exists($path) ) return;
+		
 		PowerConfig::set( self::_fullPath($path) . '._info_.active', true );
 		
 	}
 	
 	public static function setInactive( $path = '' ) {
+		
+		if ( !self::exists($path) ) return;
 		
 		PowerConfig::set( self::_fullPath($path) . '._info_.active', false );
 		
@@ -373,19 +389,23 @@ class PowerMenu {
 	}
 	
 	
-	protected static function _fullPath( $path ) {
+	protected static function _fullPath( $path, $create = true ) {
 		
 		// Full path for the menu root.
 		if ( empty($path) || $path == '.' ) return self::$_basePath;
 		
 		$_path = array();
 		
-		foreach ( PowerSet::dots2array($path) as $_subPath ) {
-			
-			$_path[] = $_subPath;
-			
-			PowerConfig::def( self::$_basePath . '.' . PowerSet::array2dots($_path), array( '_info_'=>self::$_defaults ));
-			
+		if ( $create ) {
+		
+			foreach ( PowerSet::dots2array($path) as $_subPath ) {
+				
+				$_path[] = $_subPath;
+				
+				PowerConfig::def( self::$_basePath . '.' . PowerSet::array2dots($_path), array( '_info_'=>self::$_defaults ));
+				
+			}
+		
 		}
 		
 		return self::$_basePath . '.' . $path;

@@ -17,7 +17,7 @@ class CakePowerController extends Controller {
 	protected $__cakePower = array(
 		'version' 			=> '1.0',
 		'components' 		=> array( 'Session', 'Auth' ),
-		'helpers' 			=> array( 'Html' ),
+		'helpers' 			=> array( 'Html', 'Paginator' ),
 	);
 	
 	
