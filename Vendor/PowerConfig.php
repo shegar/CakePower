@@ -25,7 +25,7 @@ class PowerConfig {
 		
 		$tmp =& self::$_data;
 		
-		foreach ( UTH::dots2array($key) as $i=>$key ) {
+		foreach ( PowerSet::dots2array($key) as $i=>$key ) {
 			
 			if ( !is_array($tmp) ) return false;
 			
@@ -77,7 +77,7 @@ class PowerConfig {
 		
 		$tmp =& self::$_data;
 		
-		foreach ( UTH::dots2array($key) as $key ) {
+		foreach ( PowerSet::dots2array($key) as $key ) {
 			
 			if ( !is_array($tmp) ) $tmp = array();
 			
@@ -137,7 +137,7 @@ class PowerConfig {
 		
 		$tmp =& self::$_data;
 		
-		foreach ( UTH::dots2array($key) as $key ) {
+		foreach ( PowerSet::dots2array($key) as $key ) {
 			
 			if ( !is_array($tmp) ) return ( $default !== null ) ? $default : false;
 			

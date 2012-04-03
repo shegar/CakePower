@@ -16,9 +16,12 @@ define( 'POWER_START', microtime() );
  * Import Libraries.
  */
 
+# UTH is a deprecated class!
+#App::import( 'Vendor', 'CakePower.Uth' );
+
 App::import( 'Vendor', 'CakePower.Basics' );
-App::import( 'Vendor', 'CakePower.Uth' );
 App::import( 'Vendor', 'CakePower.PowerSet' );
+App::import( 'Vendor', 'CakePower.PowerString' );
 App::import( 'Vendor', 'CakePower.PowerConfig' );
 App::import( 'Vendor', 'CakePower.PowerMenu' );
 App::import( 'Vendor', 'CakePower.PowerApp' );

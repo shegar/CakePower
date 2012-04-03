@@ -66,7 +66,14 @@ class PowerSet extends Set {
  */
 	public static function dots2array( $dots = '' ) {
 		
-		return UTH::dots2array($dots);
+		if (is_string($dots)) {
+			if (strpos($dots, ".")) {
+				return explode(".", $dots);
+			}
+			return array($dots);
+		}
+		
+		return $dots;
 		
 	}
 	

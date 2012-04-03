@@ -167,14 +167,30 @@ class PowerApp {
 		
 		}
 		
+		// If there is no admin actions the controller will be skipped!
+		if ( count($actions) == 1 ) return array();
+		
 		// Merge collected actions with the informations stored internally in the controller class.
-		if ( !empty($classVars['adminActions']) ) $actions = PowerSet::merge( $actions, $classVars['adminActions'] );
+		if ( !empty($classVars['adminActions']) ) {
+			
+			foreach ( $classVars['adminActions'] as $key=>$val ) {
+				
+				if ( !is_array($val) ) $val = array( 'label'=>$val );
+				
+				$classVars['adminActions'][$key] = $val;
+				
+			}
+			
+			$actions = PowerSet::merge( $actions, $classVars['adminActions'] );
+		}
 		
 		// Fix internal values.
 		foreach ( $actions as $name=>$info ) {
 			
 			if ( empty($info['method']) ) 	$info['method'] = $name;
 			if ( empty($info['label']) )	$info['label']	= $info['method'];
+			
+			$info['label'] = __($info['label']);
 			
 			$actions[$name] = $info;
 			
