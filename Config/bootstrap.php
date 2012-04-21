@@ -19,6 +19,7 @@ define( 'POWER_START', microtime() );
 # UTH is a deprecated class!
 #App::import( 'Vendor', 'CakePower.Uth' );
 
+// Utilities
 App::import( 'Vendor', 'CakePower.Basics' );
 App::import( 'Vendor', 'CakePower.PowerSet' );
 App::import( 'Vendor', 'CakePower.PowerString' );
@@ -26,6 +27,13 @@ App::import( 'Vendor', 'CakePower.PowerConfig' );
 App::import( 'Vendor', 'CakePower.PowerMenu' );
 App::import( 'Vendor', 'CakePower.PowerApp' );
 
+// Models
+App::import( 'Model', 'CakePower.PowerModel' );
+
+// Helpers
+App::import( 'View/Helper', 'CakePower.PowerHelper' );
+
+// CakePower initializer controller
 App::uses( 'CakePowerController', 'CakePower.Controller' );
 
 
@@ -174,6 +182,7 @@ foreach ( App::objects('plugins') as $plugin ) {
 				}
 			
 				$plugins[] = $pluginConfig;
+				
 			
 			}
 			
@@ -182,7 +191,6 @@ foreach ( App::objects('plugins') as $plugin ) {
 	}
 	
 }
-
 
 // Sort Plugins to match configuration order.
 $plugins = Set::sort( $plugins, '{n}.order', 'asc' );
@@ -209,5 +217,5 @@ PowerConfig::set( 'app.plugins', CakePlugin::loaded() );
 
 
 
-#PowerConfig::debug();
+#PowerConfig::ddebug();
 #powerTime();

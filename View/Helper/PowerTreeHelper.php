@@ -254,7 +254,7 @@ class PowerTreeHelper extends AppHelper {
 	
 	
 	/**
-	 * Tree item customization by external codel
+	 * Tree item customization by external code
 	 * This method allow an external class and an external callback to alter the item's data structure.
 	 *
 	 * In HTML mode this method is called before the item's text generation.
@@ -389,7 +389,7 @@ class PowerTreeHelper extends AppHelper {
 		
 		// Build the item's related code.
 		
-		$this->__line( $t . '<' . $this->config('listTag') . '>' );
+		if ( $this->config('listTag') ) $this->__line( $t . '<' . $this->config('listTag') . '>' );
 		
 		for ( $i=0; $i<count($tree); $i++ ) {
 			
@@ -399,7 +399,7 @@ class PowerTreeHelper extends AppHelper {
 			// Customization can set item data to false to jump the item itself:
 			if ( $tree[$i] !== false ) {
 				
-				$this->__line( $tt . '<' . $this->config('itemTag') . ' class="level-' . $depth . '">' );
+				if ( $this->config('itemTag') ) $this->__line( $tt . '<' . $this->config('itemTag') . ' class="level-' . $depth . '">' );
 				
 				$itemText = $this->__buildItemText( $tree[$i], $depth );
 			
@@ -413,13 +413,13 @@ class PowerTreeHelper extends AppHelper {
 				
 				}
 			
-				$this->__line( $tt . '</' . $this->config('itemTag') . '>' );
+				if ( $this->config('itemTag') ) $this->__line( $tt . '</' . $this->config('itemTag') . '>' );
 			
 			}
 			
 		}
 		
-		$this->__line( $t . '</' . $this->config('listTag') . '>' );
+		if ( $this->config('listTag') ) $this->__line( $t . '</' . $this->config('listTag') . '>' );
 	
 	} // EndOf: "__buildHTML()" ###################################################################
 	

@@ -12,7 +12,15 @@ class PowerHtmlHelper extends HtmlHelper {
 	
 	
 	
-	
+	public function __construct(View $View, $settings = array()) {
+		
+		// Adds tags to the form helper.
+		$this->_tags['thead'] = '<thead%s>%s</thead>';
+		$this->_tags['tbody'] = '<tbody%s>%s</tbody>';
+		
+		parent::__construct($View, $settings);
+		
+	}
 	
 	
 	
@@ -213,6 +221,21 @@ class PowerHtmlHelper extends HtmlHelper {
 		return parent::tag( $name, $text, $options );
 	
 	}
+	
+	
+	
+	
+	
+/**	
+ * Interface to an authorization layer.
+ * Test an if an url can be accessed. 
+ * 
+ * Return values:
+ * true: 	the url can be accessed
+ * false: 	the url is denied
+ * null: 	it is no possibile to check the url (external urls...)
+ */
+	public function allowUrl( $url = '' ) { return true; }
 	
 
 }

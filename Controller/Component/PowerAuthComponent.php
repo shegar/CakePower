@@ -36,6 +36,7 @@ class PowerAuthComponent extends AuthComponent {
 	
 	
 	public function startup(Controller $controller) {
+		
 		if ($controller->name == 'CakeError') {
 			return true;
 		}
@@ -109,6 +110,8 @@ class PowerAuthComponent extends AuthComponent {
 		
 		/** @@CakePOWER@@ **/
 		#$controller->redirect($controller->referer('/'), null, true);
+		#return false
+		
 		
 		
 		// Hard redirect mode - always redirect to this url.
@@ -129,10 +132,14 @@ class PowerAuthComponent extends AuthComponent {
 			
 		}
 		
+		// Prevent the redirect recursion going to the login page if access is denied!
+		if ( strpos(strrev($redirect),strrev($this->request->here)) === 0 ) $redirect = $this->loginAction;
+		
 		// Apply the redirect.
 		$controller->redirect($redirect, null, true);
 		
 		return false;
+		/** ##CakePOWER## **/
 		
 	}
 
