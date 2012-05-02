@@ -359,6 +359,13 @@ class PowerSessionComponent extends SessionComponent {
 		
 	}
 	
+	public function forceAjaxRedirect() {
+		
+		$_POST['_redirect'] = 1;
+		$_GET['_redirect'] 	= 1;
+		
+	}
+	
 	public function confirm( $str, $redirect = array() ) {
 		
 		$this->ok( $str, array(

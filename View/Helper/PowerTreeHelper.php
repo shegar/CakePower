@@ -95,7 +95,9 @@ class PowerTreeHelper extends AppHelper {
 			// Output configuration.
 			'output'		=> 'HTML', // [HTML,XML,JSON] - case insensitive.
 			'listTag' 		=> 'ul',
+			'listOpt'		=> array(),
 			'itemTag'		=> 'li',
+			'itemOpt'		=> array(),
 			
 			// Data handling
 			// used in "__buildItemText()" to show a node content
@@ -206,7 +208,7 @@ class PowerTreeHelper extends AppHelper {
 		switch ( $this->config('output') ) {
 			
 			case 'HTML':
-				$this->__buildHTML( $this->__tree, 0 );	
+				return $this->__buildHTML( $this->__tree, 0 );	
 				return $this->__outputHTML();
 				
 			case 'JSON':
@@ -389,7 +391,8 @@ class PowerTreeHelper extends AppHelper {
 		
 		// Build the item's related code.
 		
-		if ( $this->config('listTag') ) $this->__line( $t . '<' . $this->config('listTag') . '>' );
+		//if ( $this->config('listTag') ) $this->__line( $t . '<' . $this->config('listTag') . '>' );
+		ob_start();
 		
 		for ( $i=0; $i<count($tree); $i++ ) {
 			
@@ -399,27 +402,31 @@ class PowerTreeHelper extends AppHelper {
 			// Customization can set item data to false to jump the item itself:
 			if ( $tree[$i] !== false ) {
 				
-				if ( $this->config('itemTag') ) $this->__line( $tt . '<' . $this->config('itemTag') . ' class="level-' . $depth . '">' );
+				//if ( $this->config('itemTag') ) $this->__line( $tt . '<' . $this->config('itemTag') . ' class="level-' . $depth . '">' );
 				
 				$itemText = $this->__buildItemText( $tree[$i], $depth );
 			
-				$this->__line( $tt . $itemText );
+				//$this->__line( $tt . $itemText );
 			
 			
 				// Recursion inside the tree.
 				if ( $this->__canRecurse($depth) && !empty($tree[$i][$this->config('children')]) ) {
 				
-					$this->__buildHTML( $tree[$i][$this->config('children')], $depth+1 );
+					//$this->__buildHTML( $tree[$i][$this->config('children')], $depth+1 );
+					$itemText.= $this->__buildHTML( $tree[$i][$this->config('children')], $depth+1 );
 				
 				}
 			
-				if ( $this->config('itemTag') ) $this->__line( $tt . '</' . $this->config('itemTag') . '>' );
+				//if ( $this->config('itemTag') ) $this->__line( $tt . '</' . $this->config('itemTag') . '>' );
+				echo $this->Html->tag( $this->config('itemTag'), $itemText, $this->config('itemOpt') );
 			
 			}
 			
-		}
+		} 
 		
-		if ( $this->config('listTag') ) $this->__line( $t . '</' . $this->config('listTag') . '>' );
+		//if ( $this->config('listTag') ) $this->__line( $t . '</' . $this->config('listTag') . '>' );
+		
+		if ( $this->config('listTag') ) return $this->Html->tag( $this->config('listTag'), ob_get_clean(), $this->config('listOpt') ); else return ob_get_clean();
 	
 	} // EndOf: "__buildHTML()" ###################################################################
 	

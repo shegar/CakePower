@@ -120,5 +120,74 @@ class PowerString extends String {
 	
 	
 	
+/**	
+ * Parse a string as placeholder information.
+ * 
+ * A placeholder may be dropped in a string as:
+ * {name:type?a=foo1&b=foo2}
+ * 
+ * A mechanism extraxts content in brakets and pass to this method:
+ * $str = "name:type?a=foo1&b=foo"
+ * 
+ * The output is an associative array with parsed informations:
+ * return array(
+ *     'name' => 'name',
+ *     'type' => 'type',
+ *     'info' => array( 'a'=>'foo1', 'b'=>'foo2' )
+ * );
+ */
+	public static function parsePlaceholder( $str, $options = array() ) {
+		
+		$options += array( 'defaultType'=>'text' );
+		
+		$return = array(
+			'name' 	=> '',
+			'type'	=> '',
+			'info'	=> array()
+		);
+		
+		// Ensure the presence of booth var name and options tokens
+		if ( strpos($str,'?') === false ) $str.= '?';
+		list( $p1, $p2 ) = explode( '?', $str );
+		
+		// Parse var name and type
+		if ( strpos($p1,':') === false ) $p1.= ':';
+		list( $return['name'], $return['type'] ) = explode( ':', $p1 );
+		
+		// Parse url info (the querystring token)
+		if ( !empty($p2) ) parse_str( $p2, $return['info'] );
+		
+		// Set defaults.
+		if ( empty($return['type']) ) $return['type'] = $options['defaultType'];
+		
+		if ( empty($return['name']) ) return false;
+		return $return;
+		
+	}
+	
+	
+	
+	
+	public static function getFirstTrunk( $str, $sep = '.' ) {
+		
+		$tokens = PowerString::tokenize( $str, $sep );
+		if ( !is_array($tokens) || !count($tokens) ) return false;
+		
+		return $tokens[0];
+	
+	}
+	
+	public static function getLastTrunk( $str, $sep = '.' ) {
+		
+		$tokens = PowerString::tokenize( $str, $sep );
+		if ( !is_array($tokens) || !count($tokens) ) return false;
+		
+		$tokens = array_reverse($tokens);
+		return $tokens[0];
+	
+	}
+	
+	
+	
 	
 }

@@ -237,5 +237,89 @@ class PowerHtmlHelper extends HtmlHelper {
  */
 	public function allowUrl( $url = '' ) { return true; }
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+/**	
+ * Actions Link
+ * these methods expose some actions that user may use in the view AS CONCEPTS.
+ * 
+ * Each method generates a simple link that implement a class.
+ * It is a UI assets stuff to apply css rules and behaviors to that class!
+ * 
+ * Some UI kit like Twitter Bootstrap supplies some action driven components (aka buttons)
+ */
+	
+	
+	public function action( $url = array(), $options = array() ) {
+		
+		if ( is_string($options) ) $options = array( 'text'=>$options );
+		
+		$options += array( 'text'=>'', 'class'=>'ui-action' );
+		
+		if ( strpos($options['class'],'ui-action') === false ) $options['class'] = 'ui-action ' . $options['class'];
+		
+		// data-icon
+		if ( isset($options['icon']) ) {
+			$options['data-icon'] = $options['icon'];
+			unset($options['icon']);
+		}
+		
+		// data-confirm-msg
+		if ( isset($options['confirm']) ) {
+			if ( !is_array($options['confirm']) ) $options['confirm'] = array( 'msg'=>$options['confirm'] );
+			$options['data-confirm-msg'] = $options['confirm']['msg'];
+			unset($options['confirm']);
+		}
+		
+		$text = $options['text'];
+		unset($options['text']);
+		
+		return $this->link( $text, $url, $options );
+		
+	}
+	
+	public function editAction( $url = array(), $options = array() ) {
+		
+		if ( is_string($options) ) $options = array( 'text'=>$options );
+		
+		$options += array( 'text'=>'edit', 'class'=>'' );
+		
+		if ( strpos($options['class'],'ui-action-edit') === false ) {
+			$options['class'] = 'ui-action-edit ' . $options['class'];	
+		}
+		
+		return $this->action( $url, $options );
+		
+	}
+	
+	public function deleteAction( $url = array(), $options = array() ) {
+		
+		if ( is_string($options) ) $options = array( 'text'=>$options );
+		
+		$options += array( 'text'=>'delete', 'class'=>'' );
+		
+		if ( strpos($options['class'],'ui-action-delete') === false ) {
+			$options['class'] = 'ui-action-delete ' . $options['class'];
+		}
+		
+		return $this->action( $url, $options );
+		
+	}
+	
+	
+	
+	
+	
+	
 
 }

@@ -276,5 +276,37 @@ class PowerApp {
 		return $imported;
 		
 	}
+	
+	
+	
+	
+	
+	public static function loadEventListeners( $repo, $sub ) {
+		
+		App::uses( 'CakeEventListener', 'Event' );
+		App::uses( 'Folder', 			'Utility' );
+		
+		foreach ( App::path($repo) as $repo_path ) {
+			
+			$repo_path .= $sub . DS;
+			
+			if ( !file_exists($repo_path) ) continue;
+			
+			$fld 	= new Folder($repo_path);
+			$dir 	= $fld->read();
+			foreach ( $dir[1] as $file_name ) {
+				
+				if ( PowerString::getLastTrunk($file_name) !== 'php' ) continue;
+				$class_name = PowerString::getFirstTrunk($file_name);
+				
+				// Import and add instance to the CakeEventManager
+				if ( App::import( $repo.'/'.$sub, $class_name ) ) CakeEventManager::instance()->attach( new $class_name() );
+				
+			}
+		
+		}
+	
+	}
+	
 
 }
