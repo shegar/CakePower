@@ -12,8 +12,10 @@ App::uses('Folder',		'Utility');
 App::uses('File',		'Utility');
 App::uses('Component',	'Controller');
 App::uses('lessc',		'CakePower.Vendor');
-// Used to store less temporary files.
-define( 'CACHE_LESS', CACHE . 'less' . DS );
+
+// Less constants.
+if ( !defined('CACHE_LESS') ) 	define( 'CACHE_LESS', CACHE . 'less' . DS );
+if ( !defined('LESS_URL') ) 	define( 'LESS_URL', 'less'.DS );
 
 
 
@@ -143,8 +145,8 @@ class PowerHtmlHelper extends HtmlHelper {
 			/** @@CakePOWER@@ **/
 			// Compile less source to the css output file.
 			// If debug > 0 
-			$source = $this->lessFolder->path.DS.$path.'.less';
-			$target = $this->cssFolder->path.DS.$path.'.css';
+			$source = $this->assetPath($path, $options + array('pathPrefix' => LESS_URL, 'ext' => '.less'));
+			$target = $this->assetPath($path, $options + array('pathPrefix' => CSS_URL, 'ext' => '.css', 'exists'=>false));
 			if ( ( !file_exists($target) || Configure::read('debug') ) && file_exists($source) ) $this->auto_compile_less($source, $target);
 			/** --CakePOWER-- **/
 			
@@ -204,6 +206,9 @@ class PowerHtmlHelper extends HtmlHelper {
 	
 	
 	
+	
+	
+	
 /**
  * tag()
  * ------------------------------------
@@ -248,6 +253,17 @@ class PowerHtmlHelper extends HtmlHelper {
 		return parent::tag( $name, $text, $options );
 	
 	}
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
