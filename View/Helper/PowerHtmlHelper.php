@@ -6,9 +6,21 @@
 
 App::import( 'View/Helper', 'HtmlHelper' );
 
+
+// Less Support Libraries.
+App::uses('Folder',		'Utility');
+App::uses('File',		'Utility');
+App::uses('Component',	'Controller');
+App::uses('lessc',		'CakePower.Vendor');
+// Used to store less temporary files.
+define( 'CACHE_LESS', CACHE . 'less' . DS );
+
+
+
+
 class PowerHtmlHelper extends HtmlHelper {
 	
-
+	
 	
 	
 	
@@ -19,6 +31,11 @@ class PowerHtmlHelper extends HtmlHelper {
 		$this->_tags['tbody'] = '<tbody%s>%s</tbody>';
 		
 		parent::__construct($View, $settings);
+		
+		// Setup Less parsing folders.
+		$this->lessFolder 	= new Folder(WWW_ROOT.'less', true, 0755 );
+		$this->lessCache	= new Folder(CACHE_LESS, true, 0755 );
+		$this->cssFolder 	= new Folder(WWW_ROOT.'css', true, 0755 );
 		
 	}
 	
@@ -122,6 +139,16 @@ class PowerHtmlHelper extends HtmlHelper {
 		if (strpos($path, '//') !== false) {
 			$url = $path;
 		} else {
+			
+			/** @@CakePOWER@@ **/
+			// Compile less source to the css output file.
+			// If debug > 0 
+			$source = $this->lessFolder->path.DS.$path.'.less';
+			$target = $this->cssFolder->path.DS.$path.'.css';
+			if ( ( !file_exists($target) || Configure::read('debug') ) && file_exists($source) ) $this->auto_compile_less($source, $target);
+			/** --CakePOWER-- **/
+			
+			
 			$url = $this->assetUrl($path, $options + array('pathPrefix' => CSS_URL, 'ext' => '.css'));
 
 			if (Configure::read('Asset.filter.css')) {
@@ -313,6 +340,64 @@ class PowerHtmlHelper extends HtmlHelper {
 		}
 		
 		return $this->action( $url, $options );
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+/**	
+ * Less Integration methods
+ * It parse a LESS file into a CSS.
+ */
+	protected function auto_compile_less($lessFilename, $cssFilename) {
+		
+		// Check if cache & output folders are writable and the less file exists.
+		if (!is_writable(CACHE.'less')) {
+			trigger_error(__d('cake_dev', '"%s" directory is NOT writable.', CACHE.'less'), E_USER_NOTICE);
+			return;
+		}
+		
+		if (file_exists($lessFilename) == false) {
+			trigger_error(__d('cake_dev', 'File: "%s" not found.', $lessFilename), E_USER_NOTICE);
+			return;
+		}
+
+		// Cache location
+		$cacheFilename = CACHE.'less'.DS.str_replace('/', '_', str_replace($this->lessFolder->path, '', $lessFilename).".cache");
+
+		// Load the cache
+		if (file_exists($cacheFilename)) {
+			$cache = unserialize(file_get_contents($cacheFilename));
+		} else {
+			$cache = $lessFilename;
+		}
+
+		$new_cache = lessc::cexecute($cache);
+		if (!is_array($cache) || $new_cache['updated'] > $cache['updated'] || file_exists($cssFilename) === false) {
+			$cssFile = new File($cssFilename, true);
+			if ($cssFile->write($new_cache['compiled']) === false) {
+				if (!is_writable(dirname($cssFilename))) {
+					trigger_error(__d('cake_dev', '"%s" directory is NOT writable.', dirname($cssFilename)), E_USER_NOTICE);
+				}
+				trigger_error(__d('cake_dev', 'Failed to write "%s"', $cssFilename), E_USER_NOTICE);
+			}
+
+			$cacheFile = new File($cacheFilename, true);
+			$cacheFile->write(serialize($new_cache));
+		}
 		
 	}
 	
