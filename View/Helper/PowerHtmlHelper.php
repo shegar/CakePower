@@ -233,7 +233,15 @@ class PowerHtmlHelper extends HtmlHelper {
  * @param unknown_type $text
  * @param unknown_type $options
  */	
-	public function tag($name, $text = null, $options = array()) {
+	public function tag( $name, $text = null, $options = array()) {
+		
+		if ( is_array($name) ) {
+			
+			$name += array( 'name'=>'', 'content'=>'', 'options'=>array() );
+			
+			return $this->tag( $name['name'], $name['content'], $name['options'] );
+			
+		} 
 		
 		if ( is_array($text) ) {
 			
@@ -249,15 +257,57 @@ class PowerHtmlHelper extends HtmlHelper {
 			
 		}
 		
+		// Prevent blank attributes to be appended to the HTML
+		if ( empty($options['class']) ) 		unset($options['class']);
+		if ( empty($options['id']) ) 			unset($options['id']);
+		if ( empty($options['style']) ) 		unset($options['style']);
+		
 		// Use the CakePHP's parent method to output the HTML source.
 		return parent::tag( $name, $text, $options );
 	
 	}
-	
 
 	
+/**	
+ * Complete override of the CakePHP's HtmlHelper::div()
+ * It behaves like the original method but using CakePower's tag() 
+ * all empty tag attributes are cleaned!
+ */
+	public function div( $class, $text = null, $options = array()) {
+		
+		$options['class'] = $class;
+		
+		return $this->tag( 'div', $text, $options );
+	
+	}
+
+	
+/**
+ * Acts like "div()" but allow to pass div's ID as first parameter
+ */	
+	public function idiv( $id, $text = null, $options = array() ) {
+		
+		$options += array( 'class'=>'' );
+		
+		$options['id'] = $id;
+		
+		return $this->div( $options['class'], $text, $options );
+		
+	}
 	
 	
+	
+/**	
+ * Override
+ * Automagically disable escape as default options if images are linked.
+ */
+	public function link($title, $url = null, $options = array(), $confirmMessage = false) {
+		
+		if ( strpos($title,'<img src') !== false ) $options += array( 'escape'=>false );
+		
+		return parent::link( $title, $url, $options, $confirmMessage );
+		
+	}
 	
 	
 	

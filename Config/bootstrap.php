@@ -28,10 +28,10 @@ App::import( 'Vendor', 'CakePower.PowerMenu' );
 App::import( 'Vendor', 'CakePower.PowerApp' );
 
 // Models
-App::import( 'Model', 'CakePower.PowerModel' );
+App::import( 'Model', 'CakePower.CakePowerModel' );
 
 // Helpers
-App::import( 'View/Helper', 'CakePower.PowerHelper' );
+App::import( 'View/Helper', 'CakePower.CakePowerHelper' );
 
 // CakePower initializer controller
 App::uses( 'CakePowerController', 'CakePower.Controller' );

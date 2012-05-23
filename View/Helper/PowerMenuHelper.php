@@ -17,7 +17,19 @@ class PowerMenuHelper extends PowerTreeHelper {
 		
 		$tree = PowerMenu::getTree($path);
 		
+		$config += array( 'callable' => new PowerMenuHelper__TreeHelperExtension );
+		
 		return parent::generate( $tree, $config );
+		
+	}
+
+}
+
+class PowerMenuHelper__TreeHelperExtension extends TreeHelperExtension {
+	
+	function displayLogic( $node ) {
+		
+		return $this->subject()->Html->link( $node['PowerMenu']['show'], $node['PowerMenu']['url'] );
 		
 	}
 

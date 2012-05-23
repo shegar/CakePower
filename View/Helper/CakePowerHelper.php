@@ -5,7 +5,7 @@
 
 App::uses('Helper', 'View');
 
-class PowerHelper extends Helper {
+class CakePowerHelper extends Helper {
 	
 
 	

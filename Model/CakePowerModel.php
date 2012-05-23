@@ -1,7 +1,7 @@
 <?php
 App::uses('Model', 'Model');
 
-class PowerModel extends Model {
+class CakePowerModel extends Model {
 
 	
 	
